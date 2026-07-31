@@ -1,0 +1,69 @@
+# Face Recognition System - InsightFace
+# Requirements file untuk instalasi dependencies
+# Compatible with Python 3.9 - 3.12
+
+# Core dependencies
+numpy>=1.26.4,<2.0.0  # 1.26.4 minimum karena 1.26.0-3 punya issue di Python 3.13 (Pi OS Bookworm)
+opencv-python>=4.8.0,<5.0.0
+insightface>=0.7.3
+
+# ONNX Runtime (pilih salah satu)
+# Untuk CPU only (Raspberry Pi / PC tanpa GPU):
+onnxruntime>=1.16.0
+
+# Untuk GPU (uncomment jika punya NVIDIA GPU):
+# onnxruntime-gpu>=1.16.0
+
+# QR Code support (optional - may have DLL issues on some systems)
+qrcode[pil]>=7.4.0
+pyzbar>=0.1.9
+cryptography>=41.0.0
+pillow>=10.0.0
+
+# Additional dependencies (otomatis terinstall dengan insightface)
+# albumentations
+# scipy
+# scikit-image
+# tqdm
+# requests
+
+# Performance monitoring
+psutil>=5.9.0  # For CPU and memory monitoring
+
+# CLI Styling
+rich>=13.0.0
+
+# MySQL / MariaDB database
+# Pilih salah satu:
+# mysql-connector-python (rekomendasi untuk Windows)
+# pymysql (rekomendasi untuk Raspberry Pi / MariaDB 11.x)
+mysql-connector-python>=9.0.0
+pymysql>=1.1.0
+
+# Web UI
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+jinja2>=3.1.0
+
+# Export log admin ke Excel (.xlsx)
+openpyxl>=3.1.0
+
+# Password hashing untuk akun admin (tabel safepick.account)
+bcrypt>=4.0.0
+
+# Text-to-Speech
+# gTTS memakai layanan Google Translate TTS; butuh internet saat generate audio baru.
+gTTS>=2.5.0
+
+# GPIO control (Raspberry Pi only - aman di-skip di Windows/Mac, modul LED auto no-op)
+# Butuh apt: swig + liblgpio-dev (sudah di-install via scripts/setup_pi.sh)
+gpiozero>=2.0
+lgpio>=0.2.2 ; platform_system == "Linux"
+
+# Development tools (optional — hapus section ini di production)
+pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+jupyter>=1.0.0
+ipython>=8.0.0
