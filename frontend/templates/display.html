@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SafePick Display</title>
+    <link rel="stylesheet" href="/static/css/lcd.css?v=52">
+  </head>
+  <body>
+    <!-- Popup informasi URL admin: muncul saat /display di-load, auto-hide 30 detik -->
+    <div class="admin-url-popup hidden" id="adminUrlPopup" role="dialog" aria-labelledby="adminUrlTitle">
+      <div class="popup-inner">
+        <button class="popup-close" id="adminPopupClose" type="button" aria-label="Tutup">✕</button>
+        <h3 id="adminUrlTitle">Akses Admin</h3>
+        <p>Buka URL berikut di HP / laptop yang sejaringan:</p>
+        <code id="adminUrlText">memuat…</code>
+        <p class="popup-timer">Tutup otomatis dalam <span id="adminPopupCountdown">30</span> detik</p>
+      </div>
+    </div>
+
+    <!-- Modal WiFi setup (fullscreen overlay, hidden by default) -->
+    <div class="wifi-modal hidden" id="wifiModal" role="dialog" aria-labelledby="wifiModalTitle">
+      <div class="wifi-modal-inner">
+        <header class="wifi-modal-header">
+          <h3 id="wifiModalTitle">WiFi</h3>
+          <button class="wifi-modal-close" id="wifiCloseBtn" type="button" aria-label="Tutup">✕</button>
+        </header>
+        <div class="wifi-current" id="wifiCurrent">Memuat status…</div>
+
+        <!-- View list networks -->
+        <div class="wifi-view-list" id="wifiViewList">
+          <button class="wifi-scroll-btn" id="wifiScrollUp" type="button" aria-label="Scroll ke atas">▲</button>
+          <div class="wifi-list" id="wifiList"></div>
+          <button class="wifi-scroll-btn" id="wifiScrollDown" type="button" aria-label="Scroll ke bawah">▼</button>
+          <button class="wifi-rescan" id="wifiRescanBtn" type="button">🔄 Scan ulang</button>
+        </div>
+
+        <!-- View connect form (hidden, shown after pick a SSID) -->
+        <div class="wifi-view-form hidden" id="wifiViewForm">
+          <h4 id="wifiSelectedSsid">SSID</h4>
+          <input class="wifi-password-input" id="wifiPasswordInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" readonly placeholder="Tap untuk masukkan password">
+          <div class="wifi-form-buttons">
+            <button class="wifi-btn-cancel" id="wifiCancelBtn" type="button">Batal</button>
+            <button class="wifi-btn-connect" id="wifiConnectBtn" type="button">Connect</button>
+          </div>
+          <div class="wifi-form-status" id="wifiFormStatus"></div>
+        </div>
+      </div>
+
+      <!-- Virtual keyboard (hidden, shown saat input password di-tap) -->
+      <div class="virtual-keyboard hidden" id="virtualKeyboard"></div>
+    </div>
+
+    <!-- Modal Bluetooth setup (mirror dari WiFi modal) -->
+    <div class="wifi-modal hidden" id="btModal" role="dialog" aria-labelledby="btModalTitle">
+      <div class="wifi-modal-inner">
+        <header class="wifi-modal-header">
+          <h3 id="btModalTitle">Bluetooth</h3>
+          <button class="wifi-modal-close" id="btCloseBtn" type="button" aria-label="Tutup">✕</button>
+        </header>
+        <div class="wifi-current" id="btCurrent">Memuat status…</div>
+        <div class="wifi-view-list" id="btViewList">
+          <div class="wifi-list" id="btList"></div>
+          <button class="wifi-rescan" id="btRescanBtn" type="button">🔄 Scan ulang (8 detik)</button>
+        </div>
+        <div class="wifi-form-status" id="btFormStatus"></div>
+      </div>
+    </div>
+
+    <!-- Modal Volume (atur Master sistem via amixer) -->
+    <div class="wifi-modal hidden" id="volModal" role="dialog" aria-labelledby="volModalTitle">
+      <div class="wifi-modal-inner">
+        <header class="wifi-modal-header">
+          <h3 id="volModalTitle">Volume</h3>
+          <button class="wifi-modal-close" id="volCloseBtn" type="button" aria-label="Tutup">✕</button>
+        </header>
+        <div class="wifi-current" id="volCurrent">Memuat…</div>
+        <div class="vol-control">
+          <button class="vol-mute-btn" id="volMuteBtn" type="button" aria-label="Mute">🔊</button>
+          <button class="vol-step-btn" id="volDownBtn" type="button" aria-label="Kecilkan volume">−</button>
+          <div class="vol-bar"><div class="vol-bar-fill" id="volBarFill"></div></div>
+          <button class="vol-step-btn" id="volUpBtn" type="button" aria-label="Besarkan volume">+</button>
+          <span class="vol-percent" id="volPercent">50%</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="lcd-shell" data-view="home">
+      <section class="home-view" id="homeView">
+        <header class="lcd-topbar">
+          <div class="lcd-brand">
+            <img class="lcd-brand-mark" src="/static/img/safepick-logo-mark.png?v=3" alt="">
+            <div class="lcd-brand-copy">
+              <h1><span class="brand-safe">Safe</span><span class="brand-pick">Pick</span></h1>
+              <p>Verifikasi Penjemputan Siswa</p>
+            </div>
+          </div>
+          <button class="wifi-quickbtn" id="wifiBtn" type="button" aria-label="WiFi" title="WiFi"><img src="/static/img/wifi.png" alt="WiFi"></button>
+          <button class="wifi-quickbtn" id="btBtn" type="button" aria-label="Bluetooth" title="Bluetooth"><img src="/static/img/bluetooth.png" alt="Bluetooth"></button>
+          <button class="wifi-quickbtn" id="volBtn" type="button" aria-label="Volume" title="Volume"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+          <span id="dbStatus" class="status-badge">MySQL</span>
+        </header>
+
+        <section class="scan-grid" aria-label="Mode scan">
+          <button class="scan-card qr-attendance" type="button" data-mode="attendance_qr">
+            <img class="scan-icon" src="/static/img/qr-code.png" alt="">
+            <span>QR Kehadiran Siswa</span>
+          </button>
+          <button class="scan-card qr-pickup" type="button" data-mode="pickup_qr">
+            <img class="scan-icon" src="/static/img/qr-code.png" alt="">
+            <span>QR Penjemputan Non-orang Tua</span>
+          </button>
+          <button class="scan-card face-pickup" type="button" data-mode="pickup_face">
+            <img class="scan-icon" src="/static/img/face-recognation.png" alt="">
+            <span>Muka Penjemputan Orang Tua</span>
+          </button>
+        </section>
+
+        <button class="settings-button" id="displayHomeReloadBtn" type="button" aria-label="Refresh Home">
+          <img class="home-icon" src="/static/img/home-icon.png" alt="">
+        </button>
+      </section>
+
+      <section class="scan-view" id="scanView">
+        <header class="scan-topbar">
+          <h2 id="scanTitle">Scan</h2>
+        </header>
+        <section class="camera-stage">
+          <img id="scanFeed" class="camera-feed" alt="Camera stream">
+        </section>
+        <button class="settings-button scan-home-button" id="homeBtn" type="button" aria-label="Home">
+          <img class="home-icon" src="/static/img/home-icon.png" alt="">
+        </button>
+      </section>
+    </main>
+
+    <script src="/static/js/debug.js?v=1"></script>
+    <script src="/static/js/lcd.js?v=34"></script>
+  </body>
+</html>

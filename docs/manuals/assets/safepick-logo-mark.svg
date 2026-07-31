@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">SafePick logo mark</title>
+  <desc id="desc">A clean shield with a bold verification check.</desc>
+  <path fill="#127c67" d="M64 8 106 24v35c0 29-17.1 49.8-42 61-24.9-11.2-42-32-42-61V24L64 8Z"/>
+  <path fill="#fff" d="M64 22 92 32.7v27.1c0 19.5-10.5 34.1-28 43.7-17.5-9.6-28-24.2-28-43.7V32.7L64 22Z"/>
+  <path fill="#1d252c" d="M64 36a15 15 0 1 1 0 30 15 15 0 0 1 0-30Zm0 36c12.6 0 22 6.9 22 16.5v3.1a77.4 77.4 0 0 1-44 0v-3.1C42 78.9 51.4 72 64 72Z"/>
+  <path fill="#ff5c00" d="M105.1 61.1a8 8 0 0 1 0 11.3l-39 39a8 8 0 0 1-11.3 0L36.9 93.5a8 8 0 0 1 11.3-11.3l12.2 12.2 33.4-33.3a8 8 0 0 1 11.3 0Z"/>
+</svg>

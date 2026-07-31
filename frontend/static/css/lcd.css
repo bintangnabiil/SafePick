@@ -1,0 +1,1002 @@
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/static/fonts/SFPRODISPLAYBOLD.OTF") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: linear-gradient(180deg, #1b2735 0%, #122036 55%, #0b1733 100%);
+  --panel: #162434;
+  --panel-strong: #1f3145;
+  --ink: #f4f7fb;
+  --muted: #aebdca;
+  --line: #31465a;
+  --orange: #FF5C00;
+  --orange-strong: #CC4A00;
+  --teal: #2fb48d;
+  --danger: #ff7a59;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20px 20px, transparent 0 20px, #000 21.5px) left top / 20px 20px no-repeat,
+    radial-gradient(circle at 0 20px, transparent 0 20px, #000 21.5px) right top / 20px 20px no-repeat,
+    radial-gradient(circle at 20px 0, transparent 0 20px, #000 21.5px) left bottom / 20px 20px no-repeat,
+    radial-gradient(circle at 0 0, transparent 0 20px, #000 21.5px) right bottom / 20px 20px no-repeat;
+}
+
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Kiosk content protection ────────────────────────────────────────────
+ * Kunci semua selection/drag/long-press global supaya UI kiosk:
+ * - Tidak bisa di-select textnya (Text Selection Disabled)
+ * - Tidak bisa di-drag elementnya (Drag Prevention)
+ * - Tidak munculkan callout/context menu saat long-press (Copy Protection)
+ * - Tidak ada highlight tap warna abu-abu (Content Protection)
+ */
+*,
+*::before,
+*::after {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+html, body {
+  touch-action: manipulation;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+.scan-card,
+.settings-button,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+.lcd-shell {
+  width: 100vw;
+  height: 100vh;
+  min-width: 320px;
+  min-height: 240px;
+  background: var(--bg);
+}
+
+.home-view,
+.scan-view {
+  width: 100%;
+  height: 100%;
+}
+
+.lcd-shell[data-view="home"] .scan-view,
+.lcd-shell[data-view="scan"] .home-view {
+  display: none;
+}
+
+.home-view {
+  position: relative;
+  display: grid;
+  grid-template-rows: 104px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.lcd-topbar,
+.scan-topbar {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 10px 12px;
+}
+
+.lcd-topbar {
+  grid-template-columns: minmax(0, 1fr) repeat(3, 42px) 62px;
+  column-gap: 16px;
+}
+
+.scan-topbar {
+  grid-template-columns: 58px minmax(0, 1fr) 58px;
+}
+
+.lcd-topbar > div {
+  min-width: 0;
+}
+
+.lcd-brand {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.lcd-brand-copy {
+  min-width: 0;
+}
+
+.lcd-brand-mark {
+  width: 82px;
+  height: 82px;
+  display: block;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.scan-topbar::before {
+  content: "";
+  width: 58px;
+}
+
+.scan-topbar::after {
+  content: "";
+  width: 58px;
+}
+
+.lcd-topbar p,
+.lcd-topbar h1,
+.scan-topbar h2 {
+  margin: 0;
+}
+
+.lcd-topbar p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lcd-topbar h1,
+.scan-topbar h2 {
+  font-size: 30px;
+  line-height: 1.1;
+  font-family: "SF Pro Display", "Segoe UI", Arial, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.scan-topbar h2 {
+  min-width: 0;
+  max-width: 100%;
+  justify-self: center;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lcd-topbar .brand-safe {
+  color: var(--ink);
+}
+
+.lcd-topbar .brand-pick {
+  color: var(--ink);
+}
+
+.status-badge {
+  width: 58px;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge.ok {
+  border-color: rgba(47, 180, 141, 0.8);
+  color: #b7f5dd;
+}
+
+.status-badge.error {
+  border-color: rgba(255, 122, 89, 0.85);
+  color: var(--danger);
+}
+
+.scan-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  padding-bottom: 2px;
+}
+
+.scan-card {
+  min-width: 0;
+  min-height: 86px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  place-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.scan-card:active {
+  transform: translateY(1px);
+}
+
+.scan-card span:last-child {
+  font-size: 18px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.1;
+  max-width: 100%;
+  font-family: "SF Pro Display", "Segoe UI", Arial, sans-serif;
+}
+
+.scan-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--orange);
+  color: #152029;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+/* Saat .scan-icon berupa <img>: tile warna tetap, gambar di dalam tile */
+img.scan-icon {
+  object-fit: contain;
+  padding: 8px;
+}
+
+.qr-attendance,
+.qr-pickup {
+  background: var(--panel-strong);
+}
+
+.face-pickup {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  background: #172c38;
+}
+
+.face-pickup .scan-icon {
+  width: 58px;
+  background: var(--teal);
+}
+
+
+.settings-button {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(21, 32, 41, 0.45);
+  border-radius: 50%;
+  background: var(--orange);
+  color: #152029;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+  aspect-ratio: 1 / 1;
+}
+
+.home-icon {
+  width: 58%;
+  height: 58%;
+  display: block;
+  object-fit: contain;
+}
+
+.settings-button:active {
+  transform: translateY(1px);
+}
+
+.scan-view {
+  position: relative;
+  display: grid;
+  grid-template-rows: 48px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.scan-home-button .home-icon {
+  width: 58%;
+  height: 58%;
+}
+
+.camera-stage {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #04080d;
+}
+
+.camera-feed {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  background: #04080d;
+}
+
+@media (max-width: 360px), (max-height: 260px) {
+  .home-view {
+    grid-template-rows: 62px minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .lcd-topbar,
+  .scan-topbar {
+    border-radius: 6px;
+    padding: 4px 6px;
+  }
+
+  .lcd-topbar {
+    grid-template-columns: minmax(0, 1fr) repeat(3, 30px) 44px;
+    column-gap: 8px;
+    row-gap: 5px;
+  }
+
+  .lcd-topbar h1,
+  .scan-topbar h2 {
+    font-size: 17px;
+  }
+
+  .scan-topbar h2 {
+    font-size: 16px;
+  }
+
+  .lcd-brand {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .lcd-brand-mark {
+    width: 46px;
+    height: 46px;
+  }
+
+  .lcd-topbar p {
+    font-size: 9px;
+  }
+
+  .wifi-quickbtn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .wifi-quickbtn img,
+  .wifi-quickbtn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .status-badge {
+    width: 44px;
+    min-height: 26px;
+    font-size: 10px;
+  }
+
+  .scan-grid {
+    gap: 6px;
+  }
+
+  .scan-card {
+    min-height: 72px;
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+
+  .scan-card span:last-child {
+    font-size: 15px;
+  }
+
+  .scan-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* =========================
+   Kiosk exit button (✕ pojok kanan atas)
+   ========================= */
+.kiosk-exit-button {
+  position: fixed;
+  top: 6px;
+  right: 6px;
+  z-index: 9999;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(220, 53, 69, 0.85);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 32px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: background 0.15s, transform 0.1s;
+}
+.kiosk-exit-button:hover,
+.kiosk-exit-button:active {
+  background: rgba(220, 53, 69, 1);
+  transform: scale(1.05);
+}
+
+/* Sembunyikan tombol exit kiosk saat WiFi modal terbuka.
+   Modal punya tombol close sendiri ✕ di pojok kanan atasnya. */
+body.wifi-modal-open .kiosk-exit-button {
+  display: none;
+}
+
+/* Sembunyikan tombol exit kiosk saat sudah masuk salah satu mode scan.
+   ✕ hanya muncul di home supaya tidak mengganggu tampilan kamera/QR. */
+body:not(.view-home) .kiosk-exit-button {
+  display: none;
+}
+
+/* =========================
+   Popup admin URL (saat /display load) — dimensi besar untuk LCD 480x320
+   ========================= */
+.admin-url-popup {
+  position: fixed;
+  inset: 0;                               /* fullscreen overlay */
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);        /* backdrop gelap supaya fokus */
+  font-family: system-ui, sans-serif;
+}
+.admin-url-popup.hidden {
+  display: none;
+}
+.admin-url-popup > .popup-inner {
+  position: relative;
+  width: 92vw;
+  max-width: 460px;
+  padding: 20px 22px 18px;
+  background: rgba(20, 25, 35, 0.98);
+  color: #f0f4ff;
+  border: 2px solid rgba(255, 92, 0, 0.5);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+.admin-url-popup h3 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #FF5C00;
+  line-height: 1.2;
+}
+.admin-url-popup p {
+  margin: 6px 0;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.admin-url-popup code {
+  display: block;
+  margin: 12px 0 8px;
+  padding: 12px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 600;
+  word-break: break-all;
+  color: #7dd3fc;
+  letter-spacing: 0.5px;
+}
+.admin-url-popup .popup-timer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+}
+.admin-url-popup .popup-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(220, 53, 69, 0.7);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 36px;
+}
+.admin-url-popup .popup-close:hover,
+.admin-url-popup .popup-close:active {
+  background: rgba(220, 53, 69, 1);
+}
+
+/* =========================
+   WiFi quick button di topbar
+   ========================= */
+.wifi-quickbtn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #7dd3fc;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.wifi-quickbtn:hover,
+.wifi-quickbtn:active {
+  background: rgba(125, 211, 252, 0.25);
+}
+.wifi-quickbtn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+.wifi-quickbtn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+/* Glyph bluetooth.png geser 8px kiri di canvas 512 (bbox center 248) — koreksi kecil ke kanan, vertikal sudah pas */
+#btBtn img {
+  transform: translateX(0.5px);
+}
+/* Warna background di belakang icon wifi & bluetooth */
+#wifiBtn {
+  background: var(--teal);
+}
+#btBtn {
+  background: #2563eb;
+}
+#wifiBtn:hover,
+#wifiBtn:active {
+  background: #279c79;
+}
+#btBtn:hover,
+#btBtn:active {
+  background: #1d4ed8;
+}
+#volBtn {
+  background: #7c3aed;
+  color: #ffffff;
+}
+#volBtn:hover,
+#volBtn:active {
+  background: #6d28d9;
+}
+
+/* Volume modal control */
+.vol-control {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 4px 2px;
+}
+.vol-mute-btn {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+.vol-mute-btn:active {
+  background: rgba(255, 255, 255, 0.22);
+}
+/* Tombol step −/+ (ganti slider drag — resistive touch + software render
+   Chromium nge-freeze saat drag kontinu; tap diskrit jauh lebih andal). */
+.vol-step-btn {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.vol-step-btn:active {
+  background: var(--orange);
+}
+.vol-step-btn:disabled {
+  opacity: 0.4;
+}
+/* Bar volume non-interaktif (cuma indikator, tak ada drag). */
+.vol-bar {
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+.vol-bar-fill {
+  height: 100%;
+  width: 50%;
+  background: var(--orange);
+  border-radius: 6px;
+  transition: width 0.12s linear;
+}
+.vol-percent {
+  flex: none;
+  min-width: 52px;
+  text-align: right;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+/* =========================
+   WiFi modal (fullscreen overlay)
+   ========================= */
+.wifi-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  /* Opaque (bukan rgba alpha) — di Chromium kiosk software-render, overlay
+     translucent fullscreen memaksa recomposite konten home di belakang tiap
+     repaint (scroll list / ketik) → hang. Opaque = compositor cull background. */
+  background: #080c14;
+  color: #f0f4ff;
+  font-family: system-ui, sans-serif;
+  isolation: isolate;
+}
+.wifi-modal.hidden {
+  display: none;
+}
+.wifi-modal-inner {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+.wifi-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.wifi-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #FF5C00;
+}
+.wifi-modal-close {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(220, 53, 69, 0.85);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.wifi-modal-close:hover,
+.wifi-modal-close:active {
+  background: rgba(220, 53, 69, 1);
+}
+
+.wifi-current {
+  padding: 6px 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.wifi-current.connected {
+  color: #4ade80;
+}
+
+/* List of WiFi networks */
+.wifi-view-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.wifi-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin: 4px 0;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+}
+/* WiFi list: matikan scroll sentuh (di kiosk resistive+software-render
+   bikin hang). Scroll lewat tombol ▲▼ saja — scrollTop tetap bisa di-set
+   walau overflow hidden. */
+#wifiList {
+  overflow: hidden;
+  touch-action: none;
+}
+.wifi-scroll-btn {
+  flex: none;
+  width: 100%;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(125, 211, 252, 0.18);
+  color: #7dd3fc;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.wifi-scroll-btn:active {
+  background: rgba(125, 211, 252, 0.4);
+}
+.wifi-scroll-btn:disabled {
+  opacity: 0.3;
+}
+.wifi-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  font-size: 14px;
+}
+.wifi-list-item:last-child { border-bottom: none; }
+.wifi-list-item:hover,
+.wifi-list-item:active {
+  background: rgba(125, 211, 252, 0.12);
+}
+.wifi-list-item.connected {
+  background: rgba(74, 222, 128, 0.12);
+}
+.wifi-list-item .ssid {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wifi-list-item .meta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Bluetooth row: area utama (connect/disconnect) + tombol Lupakan terpisah. */
+.bt-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+.bt-forget {
+  flex: none;
+  margin-left: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(248, 113, 113, 0.18);
+  color: #f87171;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.bt-forget:active {
+  background: rgba(248, 113, 113, 0.4);
+}
+
+.wifi-empty {
+  padding: 16px 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.wifi-rescan {
+  margin-top: 4px;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(125, 211, 252, 0.2);
+  color: #7dd3fc;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Connect form */
+.wifi-view-form {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0;
+}
+.wifi-view-form.hidden { display: none; }
+.wifi-view-form h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #FF5C00;
+}
+.wifi-password-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid rgba(125, 211, 252, 0.5);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #f0f4ff;
+  font-family: ui-monospace, monospace;
+  font-size: 16px;
+  letter-spacing: 1px;
+  box-sizing: border-box;
+}
+.wifi-password-input:focus {
+  outline: none;
+  border-color: #7dd3fc;
+}
+.wifi-form-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.wifi-form-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wifi-btn-cancel {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f0f4ff;
+}
+.wifi-btn-connect {
+  background: #4ade80;
+  color: #052e16;
+}
+.wifi-form-status {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  min-height: 16px;
+}
+.wifi-form-status.error { color: #f87171; }
+.wifi-form-status.success { color: #4ade80; }
+
+/* =========================
+   Virtual keyboard (QWERTY)
+   ========================= */
+.virtual-keyboard {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.virtual-keyboard.hidden { display: none; }
+.vk-row {
+  display: flex;
+  gap: 3px;
+}
+.vk-key {
+  flex: 1;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #f0f4ff;
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.vk-key:active { background: rgba(125, 211, 252, 0.5); }
+.vk-key.wide { flex: 1.5; }
+.vk-key.extra-wide { flex: 3; }
+.vk-key.special {
+  background: rgba(125, 211, 252, 0.2);
+  color: #7dd3fc;
+  font-size: 11px;
+}
+.vk-key.special:active { background: rgba(125, 211, 252, 0.5); }
+.vk-key.shift-on {
+  background: rgba(255, 209, 102, 0.35);
+  color: #FF5C00;
+}
+.vk-key.hide-kb {
+  flex: 1.2;
+  font-size: 14px;
+  letter-spacing: -2px;
+  background: rgba(244, 114, 182, 0.18);
+  color: #f9a8d4;
+}
+.vk-key.hide-kb:active { background: rgba(244, 114, 182, 0.45); }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login SafePick</title>
+    <link rel="stylesheet" href="/static/css/styles.css?v=8">
+  </head>
+  <body class="login-page">
+    <main class="login-shell">
+      <section class="login-panel">
+        <div class="brand login-brand">
+          <div class="brand-mark"><img src="/static/img/safepick-logo-mark.png?v=3" alt=""></div>
+          <div class="brand-copy">
+            <h1><span class="brand-safe">Safe</span><span class="brand-pick">Pick</span></h1>
+            <p>Verifikasi Penjemputan Siswa</p>
+          </div>
+        </div>
+
+        <form id="loginForm" class="login-form">
+          <label>Username
+            <input name="username" type="text" autocomplete="username" required autofocus>
+          </label>
+          <label>Password
+            <input name="password" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="button full" type="submit">Masuk</button>
+          <p class="status-line" id="loginStatus"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="/static/js/debug.js?v=1"></script>
+    <script src="/static/js/login.js"></script>
+  </body>
+</html>

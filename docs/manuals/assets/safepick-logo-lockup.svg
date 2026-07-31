@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" role="img" aria-labelledby="title desc">
+  <title id="title">SafePick logo</title>
+  <desc id="desc">SafePick wordmark with a shield, verification check, and face recognition frame.</desc>
+  <defs>
+    <style>
+      .word { font: 800 58px "SF Pro Display", "Segoe UI", Arial, sans-serif; letter-spacing: 0; }
+      .tagline { font: 500 17px "SF Pro Display", "Segoe UI", Arial, sans-serif; letter-spacing: 0; }
+    </style>
+  </defs>
+  <g transform="translate(18 16) scale(.9)">
+    <path fill="#127c67" d="M64 8 106 24v34c0 29.6-17.3 50.6-42 62-24.7-11.4-42-32.4-42-62V24L64 8Z"/>
+    <path fill="#fff" d="M64 18.4 96 30.6v28.1c0 22.3-12.8 39.2-32 49.6-19.2-10.4-32-27.3-32-49.6V30.6l32-12.2Z"/>
+    <path fill="#1d252c" d="M64 39.5a12 12 0 1 1 0 24 12 12 0 0 1 0-24Zm0 29.5c14.7 0 25.2 8.4 25.2 20v2.6c0 1.7-1.2 3.1-2.8 3.5A87.9 87.9 0 0 1 64 98a87.9 87.9 0 0 1-22.4-2.9 3.6 3.6 0 0 1-2.8-3.5V89c0-11.6 10.5-20 25.2-20Z"/>
+    <path fill="#ff5c00" d="M42 38h13a4 4 0 0 1 0 8h-9v9a4 4 0 0 1-8 0V42a4 4 0 0 1 4-4Zm31 0h13a4 4 0 0 1 4 4v13a4 4 0 0 1-8 0v-9h-9a4 4 0 0 1 0-8Zm-31 35a4 4 0 0 1 4 4v9h9a4 4 0 0 1 0 8H42a4 4 0 0 1-4-4V77a4 4 0 0 1 4-4Zm44 0a4 4 0 0 1 4 4v13a4 4 0 0 1-4 4H73a4 4 0 0 1 0-8h9v-9a4 4 0 0 1 4-4Z"/>
+    <path fill="#ff5c00" d="M104.6 60.7a6 6 0 0 1 0 8.5l-37.2 37.2a6 6 0 0 1-8.5 0L42.6 90.1a6 6 0 1 1 8.5-8.5l12.1 12.1 32.9-32.9a6 6 0 0 1 8.5-.1Z"/>
+  </g>
+  <text class="word" x="148" y="75" fill="#1d252c">Safe<tspan fill="#127c67">Pick</tspan></text>
+  <text class="tagline" x="151" y="108" fill="#63717c">Verifikasi penjemputan siswa berbasis pengenalan wajah</text>
+  <path fill="#ff5c00" d="M151 124h162a5 5 0 0 1 0 10H151a5 5 0 0 1 0-10Z"/>
+</svg>

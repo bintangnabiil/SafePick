@@ -1,0 +1,18 @@
+{
+  "cam_index": 0,
+  "width": 1280,
+  "height": 720,
+  "det_size": 160,
+  "min_det_score": 0.6,
+  "samples": 10,
+  "auto_capture_enroll": true,
+  "auto_capture_interval_ms": 1200,
+  "voice_announcement_enabled": true,
+  "voice_announcement_language": "id",
+  "voice_announcement_cooldown_seconds": 60,
+  "voice_announcement_template": "Ananda {nama_anak} telah dijemput.",
+  "voice_announcement_attendance_template": "Ananda {nama_anak} telah hadir.",
+  "threshold": 0.35,
+  "show_performance": true,
+  "mirror_camera": false
+}
